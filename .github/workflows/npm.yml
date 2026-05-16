@@ -22,10 +22,10 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org/'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - name: Publish to NPM
-        run: npm publish --provenance --access public
+        run: npm publish --access public
 
       # 发布到 GitHub Packages
       - name: Setup Node.js for GitHub Packages
