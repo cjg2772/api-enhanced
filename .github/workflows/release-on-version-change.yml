@@ -103,7 +103,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           cache: pnpm
 
       
@@ -302,11 +302,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
 
-      - run: npm publish --access public
+      - run: pnpm publish --access public
