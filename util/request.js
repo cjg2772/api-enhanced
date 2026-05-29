@@ -324,7 +324,6 @@ const createRequest = (uri, data, options) => {
         console.log('[ERR]', 'Unknown Crypto:', crypto)
         break
     }
-    logger.debug(`[${crypto}]`, uri)
     // settings创建
     let settings = {
       method: 'POST',
@@ -384,6 +383,17 @@ const createRequest = (uri, data, options) => {
         answer.cookie = (res.headers['set-cookie'] || []).map((x) =>
           x.replace(/\s*Domain=[^(;|$)]+;*/, ''),
         )
+
+        // debug: 统一注释块，需要时取消注释查看请求/返回的原始密文
+
+        // logger.debug(`[${crypto}]`, uri)
+        // logger.debug(`[${crypto}] encrypted data:`, JSON.stringify(encryptData))
+        // logger.debug(
+        //   `[RAW] [${crypto}]`,
+        //   use_xeapi
+        //     ? Buffer.from(body).toString('base64')
+        //     : body.toString('hex').toUpperCase(),
+        // )
 
         try {
           if (use_xeapi) {
