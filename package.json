@@ -41,6 +41,14 @@
   ],
   "main": "main.js",
   "types": "./interface.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced/issues"
+  },
+  "homepage": "https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced#readme",
   "engines": {
     "node": ">=12"
   },
