@@ -6,12 +6,14 @@ ENV NODE_ENV production
 
 WORKDIR /app
 
-COPY --chown=node:node . ./
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-RUN corepack enable && pnpm install --frozen-lockfile --network-timeout 100000
+COPY . ./
 
-EXPOSE 3000
+RUN pnpm install --frozen-lockfile
 
 USER node
+
+EXPOSE 3000
 
 CMD [ "/sbin/tini", "--", "node", "app.js" ]
