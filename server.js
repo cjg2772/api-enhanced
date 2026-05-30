@@ -304,7 +304,7 @@ async function constructServer(moduleDefs) {
           const obj = [...params]
           const options = obj[2] || {}
           let ip = ''
-          
+
           if (options.randomCNIP) {
             ip = global.cnIp
             // logger.info('Using random Chinese IP for request:', ip)
@@ -319,7 +319,7 @@ async function constructServer(moduleDefs) {
             }
             // logger.info('Requested from ip:', ip)
           }
-          
+
           obj[2] = {
             ...options,
             ip,

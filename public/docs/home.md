@@ -2,8 +2,6 @@
 
 网易云音乐 NodeJS API Enhanced
 
-最后更新于: 2026.2.15
-
 ## 灵感来自
 
 [disoul/electron-cloud-music](https://github.com/disoul/electron-cloud-music)
@@ -219,6 +217,10 @@ $ sudo docker run -d -p 3000:3000 netease-music-api
 ## 接口文档
 
 ### 调用前须知
+
+AI 生成的图,仅供娱乐()
+
+![ai generated](./aigen.png)
 
 !> 本项目不提供线上 demo, 只提供在线文档服务, 请不要轻易信任使用他人提供的公开服务，以免发生安全问题,泄露自己的账号和密码
 
@@ -5335,6 +5337,28 @@ let data = encodeURIComponent(
 ### 指定维度音乐排行榜列表
 
 说明 : 调用此接口,可获取城市榜、城市风格榜等指定维度音乐排行榜歌曲列表
+
+**必选参数 :**
+
+`chartCode`: 榜单编码,如 `CITY_SONG_CHART`、`CITY_STYLE_SONG_CHART`
+
+`targetId`: 目标 id,城市榜如 `110000`,城市风格榜如 北京华语流行榜 `110000_1020`。城市风格榜格式通常为 `城市 id_曲风 id`,其中曲风 id 可通过[曲风列表](#曲风列表)接口 `/style/list` 获取。城市榜的城市列表可通过[多级行政区划数据](#多级行政区划数据)接口传入 `bizCode=chart` 获取；城市风格榜的城市列表可通过该接口传空 `bizCode` 获取
+
+`targetType`: 目标类型,如 `CITY`、`CITY_STYLE`
+
+**接口地址 :** `/chart/song/detail`
+
+**调用例子 :** `/chart/song/detail?chartCode=CITY_STYLE_SONG_CHART&targetId=110000_1020&targetType=CITY_STYLE`
+
+### 会员任务 - 新版
+
+说明 : 登录后调用此接口, 获取会员任务
+
+**可选参数** `id`: 用户 id, 传入后可获取指定用户的会员任务, 不传入则获取当前登录用户的会员任务
+
+**接口地址 :** `/vip/task/v1`
+
+**调用例子 :** `/vip/task/v1` `/vip/task/v1?id=32953014`
 
 ## 离线访问此文档
 
