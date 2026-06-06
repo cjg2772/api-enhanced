@@ -244,6 +244,8 @@ pnpm test
 
 - [Yueby/music-together](https://github.com/Yueby/music-together)
 
+- [chthollyphlie/folia-major](https://github.com/chthollyphile/folia-major)
+
 ## License
 
 [MIT License](https://github.com/MoeFurina/NeteaseCloudMusicApiEnhanced/blob/main/LICENSE)
