@@ -60,8 +60,7 @@ const {
 console.log('  [2] 上传播放状态...')
 try {
   // 生成 sessionId（12 位大写字母和数字）
-  const sessionId = Math.random().toString(36).substring(2, 8).toUpperCase() + 
-                   Math.random().toString(36).substring(2, 8).toUpperCase()
+  const sessionId = Array.from({ length: 12 }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)]).join('')
   
   // 2.1 提交播放开始状态（relay_play_state_submit）
   const relayResult = await relay_play_state_submit({

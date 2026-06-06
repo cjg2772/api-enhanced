@@ -19,7 +19,7 @@ module.exports = (query, request) => {
       id: String(id),
       type: type
     },
-    progress: progress,
+    progress: Number(progress) || 0,
     sessionId: sessionId,
     playMode: playMode
   })
