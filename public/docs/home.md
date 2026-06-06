@@ -5378,6 +5378,16 @@ let data = encodeURIComponent(
 
 **调用例子 :** `/vip/sign/history`
 
+### 直接获取云盘歌曲下载链接
+
+说明 : 调用此接口, 传入云盘歌曲 id, 可直接获取云盘歌曲下载链接
+
+**必选参数 :** `id`: 云盘歌曲 id
+
+**接口地址 :** `/song/cloud/download`
+
+**调用例子 :** `/song/cloud/download?id=123456789`
+
 ## 离线访问此文档
 
 此文档同时也是 Progressive Web Apps(PWA), 加入了 serviceWorker, 可离线访问
