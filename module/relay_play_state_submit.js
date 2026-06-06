@@ -1,15 +1,28 @@
 // 提交歌曲播放状态
 
 const createOption = require('../util/option.js')
-module.exports = (query, request) => {
-  const { id, sessionId, progress = 0, playMode = 'list_loop', type = 'song' } = query
+const generateSessionId = () =>
+  Array.from(
+    { length: 12 },
+    () =>
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)],
+  ).join('')
 
-  if (!id || !sessionId) {
+module.exports = (query, request) => {
+  const {
+    id,
+    sessionId,
+    progress = 0,
+    playMode = 'list_loop',
+    type = 'song',
+  } = query
+
+  if (!id) {
     return Promise.reject({
       status: 400,
       body: {
         code: 400,
-        msg: '缺少必要参数：id, sessionId',
+        msg: '缺少必要参数：id',
       },
     })
   }
@@ -17,16 +30,20 @@ module.exports = (query, request) => {
   const playStateSubmitReq = JSON.stringify({
     resource: {
       id: String(id),
-      type: type
+      type: type,
     },
     progress: Number(progress) || 0,
-    sessionId: sessionId,
-    playMode: playMode
+    sessionId: sessionId || generateSessionId(),
+    playMode: playMode,
   })
 
   const data = {
-    playStateSubmitReq: playStateSubmitReq
+    playStateSubmitReq: playStateSubmitReq,
   }
 
-  return request('/api/relay/play/state/submit', data, createOption(query, 'weapi'))
+  return request(
+    '/api/relay/play/state/submit',
+    data,
+    createOption(query, 'weapi'),
+  )
 }
