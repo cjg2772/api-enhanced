@@ -456,6 +456,5 @@ async function serveNcmApi(options) {
 
 module.exports = {
   serveNcmApi,
-  constructServer,
   getModulesDefinitions,
 }
