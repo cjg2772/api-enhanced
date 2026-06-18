@@ -54,7 +54,7 @@
   },
   "homepage": "https://neteasecloudmusicapienhanced.js.org/",
   "engines": {
-    "node": ">=12"
+    "node": ">=22"
   },
   "lint-staged": {
     "*.js": [
