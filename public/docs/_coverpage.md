@@ -1,9 +1,3 @@
-## 目录
-
-- [NeteaseCloudMusicAPI Enhanced](#neteasecloudmusicapi-enhanced)
-
----
-
 # NeteaseCloudMusicAPI Enhanced
 
 > 🎉 全网收集最全的网易云音乐api接口 基于[NeteaseCloudMusicAPI](https://github.com/binaryify/NeteaseCloudMusicApi)的复刻版本

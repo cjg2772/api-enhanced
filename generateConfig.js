@@ -6,7 +6,7 @@ const { getXeapiPublicKey } = require('./util/xeapiKey')
 const tmpPath = require('os').tmpdir()
 const logger = require('./util/logger')
 
-const MAX_RETRIES = 10
+const MAX_RETRIES = 3
 const RETRY_DELAY_MS = 1000
 
 function sleep(ms) {
@@ -14,8 +14,21 @@ function sleep(ms) {
 }
 
 function isRetryableError(err) {
+  const msg = (err && err.message) || ''
   const status =
     (err && err.status) || (err && err.response && err.response.status)
+  if (
+    msg.includes('ETIMEDOUT') ||
+    msg.includes('ECONNRESET') ||
+    msg.includes('ECONNREFUSED') ||
+    msg.includes('socket hang up') ||
+    msg.includes('request timeout') ||
+    msg.includes('timeout') ||
+    msg.includes('network') ||
+    msg.includes('Network')
+  ) {
+    return true
+  }
   if (status && status >= 500) {
     return true
   }
@@ -27,13 +40,7 @@ async function fetchAnonymousToken() {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const res = await register_anonimous()
-      const body = res.body
-      if (body.code && body.code !== 200) {
-        const err = new Error(`匿名注册返回错误码 ${body.code}`)
-        err.status = 502
-        throw err
-      }
-      const cookie = body.cookie
+      const cookie = res.body.cookie
       if (cookie) {
         const cookieObj = cookieToJson(cookie)
         fs.writeFileSync(
@@ -44,7 +51,7 @@ async function fetchAnonymousToken() {
         logger.success('[generateConfig] 匿名 token 注册成功')
         return { success: true }
       }
-
+      // 返回了但没有 cookie，视为异常但不再重试
       logger.warn(
         `[generateConfig] 匿名注册返回了空 cookie (attempt ${attempt})`,
       )
@@ -61,6 +68,7 @@ async function fetchAnonymousToken() {
         await sleep(delay)
         continue
       }
+      // 不可重试 或 已达最大次数
       if (attempt >= MAX_RETRIES) {
         logger.error(
           `[generateConfig] 获取匿名 token 已达最大重试次数 (${MAX_RETRIES}):`,
