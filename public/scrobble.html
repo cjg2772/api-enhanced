@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>听歌打卡 - 网易云音乐 API Enhanced</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .login-link {
+      display: block;
+      margin-bottom: 24px;
+      color: #666;
+      font-size: 14px;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .login-link:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus {
+      border-color: #333;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .quick-fill {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .quick-fill span {
+      color: #0066cc;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+
+    .quick-fill span:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #333;
+      color: white;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border: none;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .btn:hover {
+      background: #555;
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: left;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: monospace;
+    }
+
+    .result.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .result.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .result.info {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .footer-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+    }
+
+    .footer-link a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>听歌打卡</h1>
+    <p class="subtitle">同步听歌记录至网易云音乐，增加听歌排行计数</p>
+
+    <a href="/qrlogin-nocookie.html" class="login-link">还没登录？点击登录</a>
+
+    <div class="form-group">
+      <label for="cookie">Cookie (可选)</label>
+      <textarea id="cookie" placeholder="请输入 Cookie，留空则默认读取本地存储的登录态" rows="3"></textarea>
+      <div class="quick-fill">
+        <span onclick="loadLocalCookie()">读取本地 Cookie</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="songId">歌曲 ID</label>
+      <input type="text" id="songId" placeholder="例如: 2756058128" value="2756058128" />
+      <div class="quick-fill">
+        示例: 
+        <span onclick="setSong('2756058128', '288651229')">妖精小姐的魔法邀约</span>
+        <span onclick="setSong('2637402867', '251025018')">Echoes of Memoria</span>
+        <span onclick="setSong('36307815', '3394198')">Lose Control</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="sourceId">来源 ID (歌单或专辑 ID)</label>
+      <input type="text" id="sourceId" placeholder="例如: 2756058128" value="2756058128" />
+    </div>
+
+    <div class="form-group">
+      <label for="time">播放时间 (秒)</label>
+      <input type="number" id="time" placeholder="300" value="300" />
+    </div>
+
+    <button id="submitBtn" class="btn" onclick="submitScrobble()">立即打卡</button>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <div class="footer-link">
+      <a href="/">返回首页</a>
+    </div>
+  </div>
+
+  <script src="https://fastly.jsdelivr.net/npm/axios@0.26.1/dist/axios.min.js"></script>
+  <script>
+    const cookieInput = document.getElementById('cookie')
+    const songIdInput = document.getElementById('songId')
+    const sourceIdInput = document.getElementById('sourceId')
+    const timeInput = document.getElementById('time')
+    const submitBtn = document.getElementById('submitBtn')
+    const resultDiv = document.getElementById('result')
+
+    // 页面初始化时尝试加载本地 Cookie
+    if (localStorage.getItem('cookie')) {
+      cookieInput.value = localStorage.getItem('cookie')
+    }
+
+    function loadLocalCookie() {
+      const local = localStorage.getItem('cookie')
+      if (local) {
+        cookieInput.value = local
+        showResult('已成功读取本地 Cookie', 'success')
+      } else {
+        showResult('未在本地发现登录 Cookie，请先登录或手动贴入', 'error')
+      }
+    }
+
+    function setSong(id, sourceId) {
+      songIdInput.value = id
+      sourceIdInput.value = sourceId
+    }
+
+    function showResult(message, type) {
+      resultDiv.textContent = message
+      resultDiv.className = 'result ' + type
+      resultDiv.style.display = 'block'
+    }
+
+    async function submitScrobble() {
+      const id = songIdInput.value.trim()
+      const sourceid = sourceIdInput.value.trim()
+      const time = timeInput.value.trim() || '300'
+      const cookie = cookieInput.value.trim()
+
+      if (!id) {
+        showResult('请输入歌曲 ID ！', 'error')
+        return
+      }
+
+      submitBtn.disabled = true
+      showResult('打卡中，请稍候...', 'info')
+
+      try {
+        const params = {
+          id,
+          sourceid: sourceid || id,
+          time,
+          timestamp: Date.now()
+        }
+        if (cookie) {
+          params.cookie = cookie
+        }
+
+        const res = await axios({
+          method: 'get',
+          url: '/scrobble',
+          params
+        })
+
+        if (res.data.code === 200) {
+          showResult('打卡成功! \n\n' + JSON.stringify(res.data, null, 2), 'success')
+        } else {
+          showResult('打卡请求已发送，但返回 code 异常：\n\n' + JSON.stringify(res.data, null, 2), 'info')
+        }
+      } catch (error) {
+        console.error(error)
+        const errData = error.response ? error.response.data : { error: error.message }
+        showResult('打卡失败，请检查登录状态或者歌曲 ID 是否正确\n\n' + JSON.stringify(errData, null, 2), 'error')
+      } finally {
+        submitBtn.disabled = false
+      }
+    }
+  </script>
+</body>
+
+</html>
