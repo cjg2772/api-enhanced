@@ -5,7 +5,7 @@ const crypto = require('crypto')
 const zlib = require('zlib')
 const axios = require('axios')
 const { APP_CONF } = require('./config.json')
-const DOMAIN3 = APP_CONF.clDomian3omain
+const DOMAIN3 = APP_CONF.clDomian3
 
 // ---- ChaCha20 纯 JS 实现 ----
 const SIGMA = [0x61707865, 0x3320646e, 0x79622d32, 0x6b206574]
