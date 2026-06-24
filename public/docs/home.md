@@ -4810,6 +4810,23 @@ bitrate = Math.floor(br / 1000)
 
 **接口地址 :** `/listen/data/today/song`
 
+### 听歌足迹 - 歌曲播放排行
+
+说明 : 登录后调用此接口, 获取歌曲播放排行, 返回每首歌的播放次数 (playCount); 默认返回前 20 名 (Top20), 不足则返回全部
+
+**必选参数 :**
+
+`type`: 维度类型 周 week 月 month
+
+**可选参数 :**
+
+`endTime` : 周: 每周周六 0 点的时间戳 月: 每月最后一天 0 点的时间戳
+不填就是本周/月的
+
+**接口地址 :** `/listen/data/song/play/rank`
+
+**调用例子 :** `/listen/data/song/play/rank?type=month`
+
 ### 听歌足迹 - 总收听时长
 
 说明 : 登录后调用此接口, 获取总收听时长; 相关接口可能需要 vip 权限
