@@ -2049,6 +2049,13 @@ export function listen_data_report(
   } & RequestBaseConfig,
 ): Promise<Response>
 
+export function listen_data_song_play_rank(
+  params: {
+    type?: string
+    endTime?: string | number
+  } & RequestBaseConfig,
+): Promise<Response>
+
 export function listen_data_today_song(
   params: RequestBaseConfig,
 ): Promise<Response>
