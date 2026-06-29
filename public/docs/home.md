@@ -3742,6 +3742,14 @@ type='1009' 获取其 id, 如`/search?keywords= 代码时间 &type=1009`
 
 **调用例子 :** `/vip/growthpoint/get?ids=7043206830_7` `/vip/growthpoint/get?ids=8613118351_1,8607552957_1`
 
+### 一键领取所有 vip 成长值
+
+说明 : 登录后调用此接口 , 一键领取所有已完成的会员任务成长值奖励
+
+**接口地址 :** `/vip/growthpoint/getall`
+
+**调用例子 :** `/vip/growthpoint/getall`
+
 ### 歌手粉丝
 
 说明 : 调用此接口 , 传入歌手 id, 可获取歌手粉丝

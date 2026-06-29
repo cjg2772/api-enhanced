@@ -1594,6 +1594,10 @@ export function vip_growthpoint_get(
   } & RequestBaseConfig,
 ): Promise<Response>
 
+export function vip_growthpoint_getall(
+  params: RequestBaseConfig,
+): Promise<Response>
+
 export function artist_fans(
   params: { id: number | string } & MultiPageConfig & RequestBaseConfig,
 ): Promise<Response>
