@@ -3612,6 +3612,14 @@ type='1009' 获取其 id, 如`/search?keywords= 代码时间 &type=1009`
 
 **调用例子 :** `/artist/new/song?limit=1` `/artist/new/song?limit=1&before=1602777625000`
 
+### 关注歌手最近新歌 - 播放全部
+
+说明 : 登录后调用此接口可获取所有关注歌手最近的 50 首新歌
+
+**接口地址 :** `/artist/new/song/playall`
+
+**调用例子 :** `/artist/new/song/playall`
+
 ### 关注歌手新 MV
 
 说明 :登录后调用此接口可获取关注歌手新 MV

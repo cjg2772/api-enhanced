@@ -1474,6 +1474,10 @@ export function artist_new_song(
   } & RequestBaseConfig,
 ): Promise<Response>
 
+export function artist_new_song_playall(
+  params: RequestBaseConfig,
+): Promise<Response>
+
 export function artist_detail(
   params: {
     id: number | string
