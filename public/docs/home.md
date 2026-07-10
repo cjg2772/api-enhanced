@@ -3630,7 +3630,7 @@ type='1009' 获取其 id, 如`/search?keywords= 代码时间 &type=1009`
 
 `before`: `startTimestamp` 的别名
 
-`sourceType`: 作品来源类型，默认为 1
+`sourceType`: 作品来源类型，已确认 `1` 表示新歌，其他取值待确认，默认为 `1`
 
 `firstRequest`: 是否首次请求，默认为 `true`，翻页时传 `false`
 
