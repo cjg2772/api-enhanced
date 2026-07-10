@@ -3620,6 +3620,24 @@ type='1009' 获取其 id, 如`/search?keywords= 代码时间 &type=1009`
 
 **调用例子 :** `/artist/new/song/playall`
 
+### 关注歌手新作品（歌曲/MV）
+
+说明 : 登录后调用此接口可分页获取关注歌手的新歌曲和 MV
+
+**可选参数 :** `limit`: 返回数量，默认为 10
+
+`startTimestamp`: 时间游标，首次请求默认为当前时间，后续请求传入上一页返回的时间游标
+
+`before`: `startTimestamp` 的别名
+
+`sourceType`: 作品来源类型，默认为 1
+
+`firstRequest`: 是否首次请求，默认为 `true`，翻页时传 `false`
+
+**接口地址 :** `/artist/new/song/mv/list/v2`
+
+**调用例子 :** `/artist/new/song/mv/list/v2` `/artist/new/song/mv/list/v2?startTimestamp=1783680576099&sourceType=1&limit=10&firstRequest=false`
+
 ### 关注歌手新 MV
 
 说明 :登录后调用此接口可获取关注歌手新 MV
