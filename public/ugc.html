@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="no-referrer" />
+    <title>云小编任务中心</title>
+    <link rel="shortcut icon" href="docs/favicon.ico" type="image/x-icon" />
+    <style>
+      .box {
+        margin-top: 20px;
+        border: 2px dashed red;
+        border-radius: 8px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>云小编任务中心</h2>
+    <button id="setCookie">设置本地令牌</button>
+    <button id="loadall">一键载入</button>
+
+    <h3>用户信息 <button id="userGet">获取用户详情</button></h3>
+    <div id="user" class="box">
+      <img src="docs/favicon.ico" alt="avatar" width="50" height="50" />
+      <span style="margin-left: 10px">未登录</span>
+      <button disabled style="margin-left: 10px">签到</button>
+    </div>
+
+    <h3>会员领取 <button id="vipGet">获取会员详情</button></h3>
+    <div id="vip" class="box">
+      <span>未载入</span>
+      <button disabled style="margin-left: 10px">领取</button>
+    </div>
+
+    <h3>审核任务 <button id="taskGet">获取任务详情</button></h3>
+    <div id="task" class="box">
+      [<span>0</span>/<span>0</span>] 审核歌曲赚贡献分 (+66)
+      <button disabled style="margin-left: 10px">去完成</button>
+    </div>
+
+    <div id="song">
+      <img src="docs/favicon.ico" alt="cover" width="100" height="100" />
+      <p>未载入</p>
+      <audio controls></audio>
+      <p>标签</p>
+      <button disabled>同意</button>
+      <button disabled>否决</button>
+      <button disabled>跳过 (不计次数)</button>
+      <p>[00:00.00]歌词</p>
+    </div>
+    <script>
+      (function () {
+        var k_cookie = 'ncm_cookie';
+        var cookie = localStorage.getItem(k_cookie) || '';
+
+        document.getElementById('setCookie').onclick = function () {
+          var ck = prompt('请填写 Cookie:', cookie);
+          if (ck !== null) {
+            cookie = ck;
+            localStorage.setItem(k_cookie, ck);
+          }
+        };
+
+        /**
+         * 发起请求
+         * @param {string} url
+         * @param {Record<string,string>} params
+         * @param {(resp:Record<string,any>)=>void} done
+         */
+        function request(url, params, done) {
+          var xhr = new XMLHttpRequest();
+          xhr.responseType = 'json';
+          xhr.timeout = 1e4; // 10s
+          xhr.onload = function () {
+            var r = xhr.response;
+            if (r.code !== 200) alert(r.message ? '' + r.code + ': ' + r.message : r.code);
+            else done(r);
+          };
+          xhr.onerror = function () {
+            alert(xhr.statusText);
+          };
+          if (cookie) params.cookie = cookie;
+          var s = '?_=' + Date.now();
+          for (var k in params) {
+            s += '&' + k + '=' + encodeURIComponent(params[k]);
+          }
+          xhr.open('GET', url + s);
+          xhr.send();
+        }
+
+        /// 用户信息 ///
+        var user = document.getElementById('user');
+        var user_img = /**@type {HTMLImageElement} */ (user.children[0]);
+        var user_name = /**@type {HTMLSpanElement} */ (user.children[1]);
+        var user_sign = /**@type {HTMLButtonElement} */ (user.children[2]);
+        var user_load = document.getElementById('userGet');
+
+        user_load.onclick = function () {
+          request('rep/ugc/user/get', {}, function (res) {
+            var d = res.data;
+            if (d.imgUrl) user_img.src = d.imgUrl + '?param=50y50';
+            user_name.innerText = d.name || '游客' + d.id;
+            user_sign.disabled = d.signed;
+          });
+        };
+
+        user_sign.onclick = function () {
+          if (!user_sign.disabled)
+            request('rep/ugc/user/sign', {}, function (res) {
+              var d = res.data;
+              user_sign.disabled = d;
+              alert('签到' + (d ? '成功' : '失败'));
+            });
+        };
+
+        /// 会员领取 ///
+        var vip = document.getElementById('vip');
+        var vip_tip = vip.children[0];
+        var vip_btn = vip.children[1];
+        var vip_load = document.getElementById('vipGet');
+
+        vip_load.onclick = function () {
+          request('rep/ugc/user/vip', {}, function (res) {
+            var d = res.data;
+            vip_tip.innerText = '' + d.status + ': ' + d.title;
+            vip_btn.disabled = d.status !== 20;
+          });
+        };
+
+        vip_btn.onclick = function () {
+          if (!vip_btn.disabled)
+            request('rep/ugc/user/collect-vip', {}, function (res) {
+              var d = res.data;
+              vip_btn.disabled = d;
+              alert('领取' + (d ? '成功' : '失败'));
+            });
+        };
+
+        /// 审核任务 ///
+        var task = document.getElementById('task');
+        var task_a = task.children[0];
+        var task_b = task.children[1];
+        var task_btn = task.children[2];
+        var task_load = document.getElementById('taskGet');
+
+        task_load.onclick = function () {
+          request('rep/ugc/activity/get', {}, function (res) {
+            var d = res.data;
+            task_a.innerText = d.count;
+            task_b.innerText = d.goalCount;
+            task_btn.disabled = d.activityId !== 5001;
+          });
+        };
+
+        task_btn.onclick = function () {
+          if (!task_btn.disabled) taskStart();
+        };
+
+        var song = document.getElementById('song');
+        var song_img = song.children[0];
+        var song_title = song.children[1];
+        var song_mp3 = song.children[2];
+        var song_tag = song.children[3];
+        var song_btn1 = song.children[4];
+        var song_btn2 = song.children[5];
+        var song_btn3 = song.children[6];
+        var song_lyric = song.children[7];
+
+        /**
+         * 获取任务
+         */
+        function taskStart() {
+          request('thinktank/audit/resource/detail', { type: '4' }, function (res) {
+            var d = res.data;
+
+            if (d.auditCount >= 50) {
+              request('rep/ugc/activity/collect', { activityId: '5001' }, function (res) {
+                alert('积分领取' + (res.data ? '成功，可以兑换会员了！' : '失败'));
+              });
+              return;
+            }
+
+            song_img.src = d.coverUrl + '?param=100y100';
+            song_title.innerText = '[' + d.resId + '] ' + d.resName + ' - ' + d.artists;
+            song_tag.innerText =
+              '[' + (d.auditCount + 1) + '/' + d.auditTaskCount + '] ' + d.initResult + '？';
+            song_lyric.innerText = (d.lyric || '') + (d.transLyric || '');
+            song_mp3.src = d.songUrl;
+            song_mp3.play();
+
+            song_btn1.onclick = function () {
+              if (!song_btn1.disabled) taskSubmit(d.taskId, '1');
+            };
+            song_btn2.onclick = function () {
+              if (!song_btn2.disabled) taskSubmit(d.taskId, '2');
+            };
+            song_btn3.onclick = function () {
+              if (!song_btn3.disabled) taskSubmit(d.taskId, '3');
+            };
+
+            setTimeout(function () {
+              song_btn1.disabled = song_btn2.disabled = song_btn3.disabled = false;
+            }, 3e3);
+          });
+        }
+        /**
+         * 提交任务
+         * @param {string} taskId
+         * @param {'1'|'2'|'3'} judgement
+         */
+        function taskSubmit(taskId, judgement) {
+          song_btn1.disabled = song_btn2.disabled = song_btn3.disabled = true;
+          request(
+            'thinktank/audit/resource/update',
+            { type: '4', taskId: taskId, judgement: judgement },
+            function (res) {
+              var d = res.data;
+              if (d.result) taskStart();
+              else alert('未知状态: ' + JSON.stringify(d));
+            },
+          );
+        }
+
+        document.getElementById('loadall').onclick = function () {
+          user_load.click();
+          vip_load.click();
+          task_load.click();
+        };
+      })();
+    </script>
+  </body>
+</html>
