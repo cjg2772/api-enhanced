@@ -53,8 +53,6 @@ module.exports = async (query, request) => {
   }
   if (data.level == 'sky') {
     data.immerseType = query.immerseType || 'c51'
-  } else if (query.immerseType) {
-    data.immerseType = query.immerseType
   }
   return request(
     `/api/song/enhance/player/url/v1`,
