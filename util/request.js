@@ -243,6 +243,9 @@ const createRequest = (uri, data, options) => {
         headers['Referer'] = options.domain || DOMAIN
         headers['User-Agent'] = options.ua || chooseUserAgent('weapi')
         data.csrf_token = csrfToken
+        if (options.checkToken) {
+          headers['X-antiCheatToken'] = token
+        }
         encryptData = encrypt.weapi(data)
         url = (options.domain || DOMAIN) + '/weapi/' + uri.substr(5)
         break
