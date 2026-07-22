@@ -5510,6 +5510,14 @@ let data = encodeURIComponent(
 
 **调用例子 :** `/ad/listening/rights/gain`
 
+### 获取免费听时长状态
+
+说明 : 登录后调用此接口, 获取免费听剩余时长
+
+**接口地址 :** `/ad/listening/rights`
+
+**调用例子 :** `/ad/listening/rights`
+
 ### 云小编 - 获取用户详情
 
 说明: 登录后调用此接口, 获取云小编用户详情
